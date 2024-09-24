@@ -63,6 +63,7 @@ class Browser:
     async def create(
         cls,
         config: Config = None,
+        retries: int = 4,
         *,
         user_data_dir: PathLike = None,
         headless: bool = False,
@@ -71,7 +72,6 @@ class Browser:
         sandbox: bool = True,
         host: str = None,
         port: int = None,
-        retries: int = 4,
         **kwargs,
     ) -> Browser:
         """

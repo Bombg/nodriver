@@ -71,6 +71,7 @@ class Browser:
         sandbox: bool = True,
         host: str = None,
         port: int = None,
+        retries: int = 4,
         **kwargs,
     ) -> Browser:
         """
@@ -88,7 +89,7 @@ class Browser:
                 **kwargs,
             )
         instance = cls(config)
-        await instance.start()
+        await instance.start(retries_connect_browser=retries)
         return instance
 
     def __init__(self, config: Config, **kwargs):

@@ -93,7 +93,7 @@ async def start(
         )
     from .browser import Browser
 
-    return await Browser.create(config,retries=20)
+    return await Browser.create(config)
 
 
 async def create_from_undetected_chromedriver(

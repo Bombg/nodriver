@@ -63,6 +63,7 @@ class Browser:
     async def create(
         cls,
         config: Config = None,
+        retries: int = 4,
         *,
         user_data_dir: PathLike = None,
         headless: bool = False,
@@ -88,7 +89,7 @@ class Browser:
                 **kwargs,
             )
         instance = cls(config)
-        await instance.start()
+        await instance.start(retries_connect_browser=retries)
         return instance
 
     def __init__(self, config: Config, **kwargs):
@@ -267,7 +268,7 @@ class Browser:
         await connection.sleep(0.25)
         return connection
 
-    async def start(self, retries_connect_browser = 20) -> Browser:
+    async def start(self=None) -> Browser:
         """launches the actual browser"""
         if not self:
             warnings.warn("use ``await Browser.create()`` to create a new instance")
@@ -317,9 +318,9 @@ class Browser:
         exe = self.config.browser_executable_path
         params = self.config()
 
-        #logger.info(
-        #    "starting\n\texecutable :%s\n\narguments:\n%s", exe, "\n\t".join(params)
-        #)
+        logger.info(
+            "starting\n\texecutable :%s\n\narguments:\n%s", exe, "\n\t".join(params)
+        )
         if not connect_existing:
             self._process: asyncio.subprocess.Process = (
                 await asyncio.create_subprocess_exec(
@@ -338,11 +339,11 @@ class Browser:
         self._http = HTTPApi((self.config.host, self.config.port))
         util.get_registered_instances().add(self)
         await asyncio.sleep(0.25)
-        for _ in range(retries_connect_browser + 1):
+        for _ in range(5):
             try:
                 self.info = ContraDict(await self._http.get("version"), silent=True)
             except (Exception,):
-                if _ == retries_connect_browser:
+                if _ == 4:
                     logger.debug("could not start", exc_info=True)
                 await self.sleep(0.5)
             else:
@@ -351,9 +352,9 @@ class Browser:
         if not self.info:
             raise Exception(
                 (
-                    f"""
+                    """
                 ---------------------
-                Failed to connect to browser after {retries_connect_browser} retries
+                Failed to connect to browser
                 ---------------------
                 One of the causes could be when you are running as root.
                 In that case you need to pass no_sandbox=True 
@@ -364,7 +365,7 @@ class Browser:
         self.connection = Connection(self.info.webSocketDebuggerUrl, _owner=self)
 
         if self.config.autodiscover_targets:
-            #logger.info("enabling autodiscover targets")
+            logger.info("enabling autodiscover targets")
 
             # self.connection.add_handler(
             #     cdp.target.TargetInfoChanged, self._handle_target_update

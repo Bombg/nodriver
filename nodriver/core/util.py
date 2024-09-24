@@ -23,6 +23,7 @@ T = typing.TypeVar("T")
 
 
 async def start(
+    retries:int = 4,
     config: Optional[Config] = None,
     *,
     user_data_dir: Optional[PathLike] = None,
@@ -34,7 +35,6 @@ async def start(
     host: Optional[str] = None,
     port: Optional[int] = None,
     expert: Optional[bool] = None,
-    retries:int = 4,
     **kwargs: Optional[dict],
 ) -> Browser:
     """

@@ -63,7 +63,6 @@ class Browser:
     async def create(
         cls,
         config: Config = None,
-        retries: int = 4,
         *,
         user_data_dir: PathLike = None,
         headless: bool = False,
@@ -89,7 +88,7 @@ class Browser:
                 **kwargs,
             )
         instance = cls(config)
-        await instance.start(retries_connect_browser=retries)
+        await instance.start()
         return instance
 
     def __init__(self, config: Config, **kwargs):

@@ -34,7 +34,7 @@ async def start(
     host: Optional[str] = None,
     port: Optional[int] = None,
     expert: Optional[bool] = None,
-    retries: Optional[int] = 4,
+    retries:int = 4,
     **kwargs: Optional[dict],
 ) -> Browser:
     """

@@ -23,7 +23,6 @@ T = typing.TypeVar("T")
 
 
 async def start(
-    retries:int = 4,
     config: Optional[Config] = None,
     *,
     user_data_dir: Optional[PathLike] = None,
@@ -94,7 +93,7 @@ async def start(
         )
     from .browser import Browser
 
-    return await Browser.create(config,retries=retries)
+    return await Browser.create(config,retries=20)
 
 
 async def create_from_undetected_chromedriver(

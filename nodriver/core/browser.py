@@ -71,6 +71,7 @@ class Browser:
         sandbox: bool = True,
         host: str = None,
         port: int = None,
+        retry: int = None,
         **kwargs,
     ) -> Browser:
         """
@@ -88,7 +89,8 @@ class Browser:
                 **kwargs,
             )
         instance = cls(config)
-        await instance.start()
+        print(retry)
+        await instance.start(retries_connect_browser=retry)
         return instance
 
     def __init__(self, config: Config, **kwargs):
@@ -267,7 +269,7 @@ class Browser:
         await connection.sleep(0.25)
         return connection
 
-    async def start(self, retries_connect_browser = 20) -> Browser:
+    async def start(self, retries_connect_browser = 4) -> Browser:
         """launches the actual browser"""
         if not self:
             warnings.warn("use ``await Browser.create()`` to create a new instance")

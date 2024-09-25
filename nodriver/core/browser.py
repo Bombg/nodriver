@@ -89,7 +89,6 @@ class Browser:
                 **kwargs,
             )
         instance = cls(config)
-        print(retry)
         await instance.start(retries_connect_browser=retry)
         return instance
 

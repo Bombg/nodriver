@@ -149,7 +149,7 @@ class EventTransaction(Transaction):
         try:
             super().__init__(None)
         except:
-            pass
+            logging.exception('Caught an error')
         self.set_result(event_object)
         self.event = self.value = self.result()
 
@@ -360,7 +360,7 @@ class Connection(metaclass=CantTouchThis):
                 return
         except AttributeError:
             # no listener created yet
-            pass
+            logger.info("Wait Exception: no listener created yet")
 
     def __getattr__(self, item):
         """:meta private:"""
@@ -534,7 +534,7 @@ class Connection(metaclass=CantTouchThis):
             # in try except since if browser connection sends this it reises an exception
             return await tx
         except ProtocolException:
-            pass
+            logger.info("_send_oneshot: ProtocolException")
 
 
 class Listener:

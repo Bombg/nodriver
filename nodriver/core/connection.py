@@ -536,7 +536,7 @@ class Connection(metaclass=CantTouchThis):
             # in try except since if browser connection sends this it reises an exception
             return await tx
         except ProtocolException:
-            logger.info("_send_oneshot: ProtocolException")
+            logger.debug("_send_oneshot: ProtocolException")
 
 
 class Listener:

@@ -149,7 +149,8 @@ class EventTransaction(Transaction):
         try:
             super().__init__(None)
         except:
-            logging.exception('Caught an error')
+            pass
+            #logging.exception('Caught an error')
         self.set_result(event_object)
         self.event = self.value = self.result()
 

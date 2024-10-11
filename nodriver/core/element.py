@@ -383,7 +383,7 @@ class Element:
         try:
             return self.remote_object.object_id
         except AttributeError:
-            logger.info("object_id: AttributeError")
+            logger.debug("object_id: AttributeError")
 
     async def click(self):
         """

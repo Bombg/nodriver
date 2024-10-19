@@ -312,8 +312,13 @@ class Connection(metaclass=CantTouchThis):
             if self.listener and self.listener.running:
                 self.listener.cancel()
                 self.enabled_domains.clear()
-            await self.websocket.close()
-            logger.debug("\n❌ closed websocket connection to %s", self.websocket_url)
+            try:
+                await self.websocket.close()
+                logger.debug("\n❌ closed websocket connection to %s", self.websocket_url)
+            except websockets.exceptions.ConnectionClosedError as e:
+                logger.warning(f"websockets.exceptions.ConnectionClosedError: {e}")
+                if self.websocket_url:
+                    logger.warning(f"Above websocket error was with: {self.websocket_url}")
 
     async def sleep(self, t: Union[int, float] = 0.25):
         await self.update_target()
